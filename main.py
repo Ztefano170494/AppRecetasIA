@@ -4,7 +4,7 @@ from google import genai
 from google.genai import types
 
 # Configuración explícita de la API Key de Google
-os.environ["GEMINI_API_KEY"] = st.secrets["AQ.Ab8RN6JlmZJOOhl-IiWyhAK45emDitj4d1vKOnDIYSjlM08FRw"]
+os.environ["GEMINI_API_KEY"] = st.secrets["GEMINI_API_KEY"]
 try:
     client = genai.Client()
 except Exception:
