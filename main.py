@@ -3,8 +3,9 @@ import streamlit as st
 from google import genai
 from google.genai import types
 
-# Configuración explícita de la API Key de Google
+# Vinculación segura de la clave usando Secrets de Streamlit Cloud
 os.environ["GEMINI_API_KEY"] = st.secrets["GEMINI_API_KEY"]
+
 try:
     client = genai.Client()
 except Exception:
@@ -32,7 +33,7 @@ st.markdown("""
 st.markdown("<h1>ChefIA Pro 🍳</h1>", unsafe_allow_html=True)
 st.markdown("<p class='subtitle'>Evolución MVP - Filtros Avanzados e Imágenes</p>", unsafe_allow_html=True)
 
-# --- SECCIÓN DE FILTROS (Nuevas Funcionalidades) ---
+# --- SECCIÓN DE FILTROS ---
 st.markdown("### 🎛️ Filtros de preparación")
 
 # 1. Filtro de uso de productos
@@ -59,15 +60,18 @@ if st.button("Generar Propuesta Integral ✨"):
     if not ingredientes.strip():
         st.error("Por favor, ingresá al menos un ingrediente para continuar.")
     else:
-                with st.spinner("Procesando filtros y consultando a la IA..."):
+        with st.spinner("Procesando filtros y consultando a la IA..."):
             
-            # Construcción del prompt dinámico según los filtros elegidos
-            restriccion_texto = "SÓLO los ingredientes provistos por el usuario." if "estrictamente" in modo_ingredientes else "los ingredientes provistos más básicos indispensables (sal, pimienta, aceite, agua)."
+            # Corrección de sangría en la lógica de filtros
+            if "estrictamente" in modo_ingredientes:
+                restriccion_texto = "SÓLO los ingredientes provistos por el usuario."
+            else:
+                restriccion_texto = "los ingredientes provistos más básicos indispensables (sal, pimienta, aceite, agua)."
             
             prompt_sistema = (
                 "Sos un chef experto de Buenos Aires, Argentina. Tu tarea es crear OBLIGATORIAMENTE TRES (3) OPCIONES "
                 f"de recetas viables, coherentes y diferentes entre sí, basadas en {restriccion_texto}\n"
-                f"RESTRICCIÓN ABSOLUTA DE TIEMPO: Cada opción propuesta debe durar MENOS de {tiempo_maximo} minutos.\n\n"
+                f"RESTRICCIÓN ABSOLUTA DE TIEMPO: Cada opción propuesta debe durar MENOS de {tiempo_maximo} minutes.\n\n"
                 "Estructura tu respuesta de forma clara usando Markdown separando cada opción. Para cada una de las 3 recetas debés incluir:\n"
                 "1. **Nombre de la receta** (Atractivo y con modismos locales).\n"
                 "2. **⏱️ Tiempo estimado** (Validando el filtro del usuario).\n"
@@ -106,7 +110,7 @@ if st.button("Generar Propuesta Integral ✨"):
 
                         ---
 
-                        ### OPRECIÓN 1: Wok Exprés de la Casa 🍳
+                        ### OPCIÓN 1: Wok Exprés de la Casa 🍳
                         *⏱️ **Tiempo estimado:** 15 minutos (Cumple filtro < {tiempo_maximo} min)*
                         
                         #### 🥗 Ingredientes y Paso a Paso:
